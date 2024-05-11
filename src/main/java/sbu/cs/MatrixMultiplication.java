@@ -5,26 +5,25 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MatrixMultiplication {
-    static List<List<Integer>> tempMatrixProduct = new ArrayList<>();
-        static List<List<Integer>> matrix_p1 = new ArrayList<>();
-        static List<List<Integer>> matrix_p2 = new ArrayList<>();
-        static List<List<Integer>> matrix_p3 = new ArrayList<>();
-        static List<List<Integer>> matrix_p4 = new ArrayList<>();
 
     // You are allowed to change all code in the BlockMultiplier class
+    static List<List<Integer>> tempMatrixProduct = new ArrayList<>();
+    static List<List<Integer>> matrix_p1 = new ArrayList<>();
+    static List<List<Integer>> matrix_p2 = new ArrayList<>();
+    static List<List<Integer>> matrix_p3 = new ArrayList<>();
+    static List<List<Integer>> matrix_p4 = new ArrayList<>();
     public static class BlockMultiplier implements Runnable {
         List<List<Integer>> matrix_A;
         List<List<Integer>> matrix_B;
         int partition;
 
         public BlockMultiplier(List<List<Integer>> matrix_A, List<List<Integer>> matrix_B, int partition) {
-
+            this.matrix_A  = matrix_A;
+            this.matrix_B = matrix_B;
+            this.partition = partition;
             // TODO
 
         }
-
-
-
         @Override
         public void run() {
             /*
@@ -128,17 +127,37 @@ public class MatrixMultiplication {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        List<List<Integer>> halfUp_matrix;
+        List<List<Integer>> halfDown_matrix;
+        for (int i = 0; i < matrix_p1.size(); i++) {
+            for (int j = 0; j < matrix_p2.get(j).size(); j++) {
+                    matrix_p1.get(i).add(matrix_p2.get(i).get(j));
+            }
+        }
+        halfUp_matrix = matrix_p1;
+        for (int i = 0; i < matrix_p3.size(); i++) {
+            for (int j = 0; j < matrix_p4.get(j).size(); j++) {
+                matrix_p3.get(i).add(matrix_p4.get(i).get(j));
+            }
+        }
+        halfDown_matrix = matrix_p3;
 
-        for(int i = 0  )
+        for (int i = 0; i < halfUp_matrix.size(); i++){
+            tempMatrixProduct.add(halfUp_matrix.get(i));
+        }
+        for (int i = 0; i < halfUp_matrix.size(); i++){
+            tempMatrixProduct.add(halfDown_matrix.get(i));
+        }
 
 
 
 
-
-        return null;
+        return tempMatrixProduct;
     }
 
     public static void main(String[] args) {
+
+        System.out.println(tempMatrixProduct);
         // Test your code here
 
 //        Scanner input = new Scanner(System.in);
