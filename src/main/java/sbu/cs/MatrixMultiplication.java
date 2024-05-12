@@ -1,29 +1,30 @@
 package sbu.cs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class MatrixMultiplication {
+    static List<List<Integer>> tempMatrixProduct = new ArrayList<>();
 
     // You are allowed to change all code in the BlockMultiplier class
-    static List<List<Integer>> tempMatrixProduct = new ArrayList<>();
-    static List<List<Integer>> matrix_p1 = new ArrayList<>();
-    static List<List<Integer>> matrix_p2 = new ArrayList<>();
-    static List<List<Integer>> matrix_p3 = new ArrayList<>();
-    static List<List<Integer>> matrix_p4 = new ArrayList<>();
     public static class BlockMultiplier implements Runnable {
+        List<List<Integer>> matrix_p1 = new ArrayList<>();
+        List<List<Integer>> matrix_p2 = new ArrayList<>();
+        List<List<Integer>> matrix_p3 = new ArrayList<>();
+        List<List<Integer>> matrix_p4 = new ArrayList<>();
         List<List<Integer>> matrix_A;
         List<List<Integer>> matrix_B;
         int partition;
 
         public BlockMultiplier(List<List<Integer>> matrix_A, List<List<Integer>> matrix_B, int partition) {
-            this.matrix_A  = matrix_A;
+            this.matrix_A = matrix_A;
             this.matrix_B = matrix_B;
             this.partition = partition;
             // TODO
 
         }
+
         @Override
         public void run() {
             /*
@@ -33,15 +34,19 @@ public class MatrixMultiplication {
 
             int a_row = matrix_A.size();
             int b_row = matrix_B.size();
+            int a_column = matrix_A.get(0).size();
+            int b_column = matrix_B.get(0).size();
 
             if (partition == 1) {
                 for (int i = 0; i < a_row / 2; i++) {
                     List<Integer> row = new ArrayList<>();
                     int sum = 0;
-                    for (int j = 0; j < b_row; j++) {
-                        for (int k = 0; k < a_row / 2; k++) {
+                    for (int j = 0; j < b_column / 2; j++) {
+                        for (int k = 0; k < a_column; k++) {
                             sum += matrix_A.get(i).get(k) * matrix_B.get(k).get(j);
                         }
+                        System.out.println(sum);
+                        System.out.println(row);
                         row.add(sum);
                     }
                     matrix_p1.add(row);
@@ -50,36 +55,40 @@ public class MatrixMultiplication {
                 for (int i = a_row / 2; i <= a_row; i++) {
                     List<Integer> row = new ArrayList<>();
                     int sum = 0;
-                    for (int j = 0; j < b_row; j++) {
-                        for (int k = 0; k < a_row / 2; k++) {
+                    for (int j = 0; j < b_column / 2; j++) {
+                        for (int k = 0; k < a_column; k++) {
                             sum += matrix_A.get(i).get(k) * matrix_B.get(k).get(j);
                         }
+                        System.out.println(sum);
+                        System.out.println(row);
                         row.add(sum);
                     }
                     matrix_p2.add(row);
                 }
-
             } else if (partition == 3) {
                 for (int i = 0; i < a_row / 2; i++) {
                     List<Integer> row = new ArrayList<>();
                     int sum = 0;
-                    for (int j = 0; j < b_row; j++) {
-                        for (int k = a_row / 2; k <= a_row; k++) {
+                    for (int j = b_column / 2; j <= b_column; j++) {
+                        for (int k = 0; k < a_column; k++) {
                             sum += matrix_A.get(i).get(k) * matrix_B.get(k).get(j);
                         }
+                        System.out.println(sum);
+                        System.out.println(row);
                         row.add(sum);
                     }
                     matrix_p3.add(row);
                 }
-
             } else if (partition == 4) {
                 for (int i = a_row / 2; i <= a_row; i++) {
                     List<Integer> row = new ArrayList<>();
                     int sum = 0;
-                    for (int j = 0; j < b_row; j++) {
-                        for (int k = a_row / 2; k <= a_row; k++) {
+                    for (int j = b_column / 2; j <= b_column; j++) {
+                        for (int k = 0; k < a_column; k++) {
                             sum += matrix_A.get(i).get(k) * matrix_B.get(k).get(j);
                         }
+                        System.out.println(sum);
+                        System.out.println(row);
                         row.add(sum);
                     }
                     matrix_p4.add(row);
@@ -113,6 +122,7 @@ public class MatrixMultiplication {
         Thread thread3 = new Thread(blockMultiplier3);
         Thread thread4 = new Thread(blockMultiplier4);
 
+
         thread1.start();
         thread2.start();
         thread3.start();
@@ -127,29 +137,32 @@ public class MatrixMultiplication {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
         List<List<Integer>> halfUp_matrix;
         List<List<Integer>> halfDown_matrix;
-        for (int i = 0; i < matrix_p1.size(); i++) {
-            for (int j = 0; j < matrix_p2.get(j).size(); j++) {
-                    matrix_p1.get(i).add(matrix_p2.get(i).get(j));
+//        System.out.println(blockMultiplier1.matrix_p1);///////////////////////////////////////
+
+        System.out.println("HEEEEEEEEEEEEEEEEEEEEEEEEEEREEEEEEEEEEEEEEEEEEEEEEEEE");
+        for (int i = 0; i < blockMultiplier1.matrix_p1.size(); i++) {
+            for (int j = 0; j < blockMultiplier2.matrix_p2.get(0).size(); j++) {
+                blockMultiplier1.matrix_p1.get(i).add(blockMultiplier2.matrix_p2.get(i).get(j));
             }
         }
-        halfUp_matrix = matrix_p1;
-        for (int i = 0; i < matrix_p3.size(); i++) {
-            for (int j = 0; j < matrix_p4.get(j).size(); j++) {
-                matrix_p3.get(i).add(matrix_p4.get(i).get(j));
+        halfUp_matrix = blockMultiplier1.matrix_p1;
+        for (int i = 0; i < blockMultiplier3.matrix_p3.size(); i++) {
+            for (int j = 0; j < blockMultiplier4.matrix_p4.get(0).size(); j++) {
+                blockMultiplier3.matrix_p3.get(i).add(blockMultiplier4.matrix_p4.get(i).get(j));
             }
         }
-        halfDown_matrix = matrix_p3;
-
-        for (int i = 0; i < halfUp_matrix.size(); i++){
-            tempMatrixProduct.add(halfUp_matrix.get(i));
-        }
-        for (int i = 0; i < halfUp_matrix.size(); i++){
-            tempMatrixProduct.add(halfDown_matrix.get(i));
-        }
+        halfDown_matrix = blockMultiplier3.matrix_p3;
 
 
+        tempMatrixProduct.addAll(halfUp_matrix);
+        tempMatrixProduct.addAll(halfDown_matrix);
+
+//        for (int i = 0; i < halfUp_matrix.size(); i++) {
+//            tempMatrixProduct.add(halfDown_matrix.get(i));
+//        }
 
 
         return tempMatrixProduct;
@@ -157,21 +170,20 @@ public class MatrixMultiplication {
 
     public static void main(String[] args) {
 
-        System.out.println(tempMatrixProduct);
-        // Test your code here
+        List<List<Integer>> matrix_A = Arrays.asList(
+                Arrays.asList(1, 2, 3, 2),
+                Arrays.asList(4, 5, 6, 4)
+        );
+        List<List<Integer>> matrix_B = Arrays.asList(
+                Arrays.asList(1, 2),
+                Arrays.asList(4, 5),
+                Arrays.asList(4, 5),
+                Arrays.asList(4, 5)
 
-//        Scanner input = new Scanner(System.in);
-//        String dividedNumbers = input.nextLine();
-//        String[] numbers = dividedNumbers.split(",");
-//
-//        for (String number : numbers) {
-//            List<Integer> row = new ArrayList<>();
-//            row.add(Integer.parseInt(number));
-//            tempMatrixProduct.add(row);
-//        }
-//
-//        for (List<Integer> row : tempMatrixProduct) {
-//            System.out.println(row);
-//        }
+        );
+
+//        ParallelizeMatMul(matrix_A, matrix_B);
+
+        System.out.println(ParallelizeMatMul(matrix_A, matrix_B));
     }
 }
