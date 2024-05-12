@@ -23,25 +23,48 @@ public class TaskScheduler
 
         @Override
         public void run() {
-            /*
-            TODO
-                Simulate utilizing CPU by sleeping the thread for the specified processingTime
-             */
-            
+            try {
+                Thread.sleep(processingTime);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    private static void bubbleSort(ArrayList<Task> tasks, int n)
+    {
+        int i, j;
+        Task temp;
+        boolean swapped;
+        for (i = 0; i < n - 1; i++) {
+            swapped = false;
+            for (j = 0; j < n - i - 1; j++) {
+                if (tasks.get(j).processingTime < tasks.get(j+1).processingTime) {
+                    temp = tasks.get(j);
+                    tasks.set(j, tasks.get(j+1));
+                    tasks.set(j+1, temp);
+                    swapped = true;
+                }
+            }
+            if (swapped == false)
+                break;
         }
     }
 
-    public static ArrayList<String> doTasks(ArrayList<Task> tasks)
-    {
+    public static ArrayList<String> doTasks(ArrayList<Task> tasks) {
         ArrayList<String> finishedTasks = new ArrayList<>();
+        bubbleSort(tasks, tasks.size());
+        for (int i = 0; i < tasks.size(); i++){
+            Thread tread = new Thread(tasks.get(i));
+            tread.start();
+            try {
+                tread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            finishedTasks.add(tasks.get(i).taskName);
 
-        /*
-        TODO
-            Create a thread for each given task, And then start them based on which task has the highest priority
-            (highest priority belongs to the tasks that take more time to be completed).
-            You have to wait for each task to get done and then start the next task.
-            Don't forget to add each task's name to the finishedTasks after it's completely finished.
-         */
+        }
+
 
         return finishedTasks;
     }
