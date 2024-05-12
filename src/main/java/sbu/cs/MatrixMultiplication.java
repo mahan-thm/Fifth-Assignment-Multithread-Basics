@@ -21,16 +21,10 @@ public class MatrixMultiplication {
             this.matrix_A = matrix_A;
             this.matrix_B = matrix_B;
             this.partition = partition;
-            // TODO
-
         }
 
         @Override
         public void run() {
-            /*
-            TODO
-                Perform the calculation and store the final values in tempMatrixProduct
-            */
 
             int a_row = matrix_A.size();
             int b_row = matrix_B.size();
@@ -40,55 +34,47 @@ public class MatrixMultiplication {
             if (partition == 1) {
                 for (int i = 0; i < a_row / 2; i++) {
                     List<Integer> row = new ArrayList<>();
-                    int sum = 0;
                     for (int j = 0; j < b_column / 2; j++) {
+                        int sum = 0;
                         for (int k = 0; k < a_column; k++) {
                             sum += matrix_A.get(i).get(k) * matrix_B.get(k).get(j);
                         }
-                        System.out.println(sum);
-                        System.out.println(row);
                         row.add(sum);
                     }
                     matrix_p1.add(row);
                 }
-            } else if (partition == 2) {
-                for (int i = a_row / 2; i <= a_row; i++) {
-                    List<Integer> row = new ArrayList<>();
-                    int sum = 0;
-                    for (int j = 0; j < b_column / 2; j++) {
-                        for (int k = 0; k < a_column; k++) {
-                            sum += matrix_A.get(i).get(k) * matrix_B.get(k).get(j);
-                        }
-                        System.out.println(sum);
-                        System.out.println(row);
-                        row.add(sum);
-                    }
-                    matrix_p2.add(row);
-                }
             } else if (partition == 3) {
-                for (int i = 0; i < a_row / 2; i++) {
+                for (int i = a_row / 2; i < a_row; i++) {
                     List<Integer> row = new ArrayList<>();
-                    int sum = 0;
-                    for (int j = b_column / 2; j <= b_column; j++) {
-                        for (int k = 0; k < a_column; k++) {
+                    for (int j = 0; j < b_column / 2; j++) {
+                        int sum = 0;
+                        for (int k = 0; k < b_row; k++) {
                             sum += matrix_A.get(i).get(k) * matrix_B.get(k).get(j);
                         }
-                        System.out.println(sum);
-                        System.out.println(row);
                         row.add(sum);
                     }
                     matrix_p3.add(row);
                 }
-            } else if (partition == 4) {
-                for (int i = a_row / 2; i <= a_row; i++) {
+            } else if (partition == 2) {
+                for (int i = 0; i < a_row / 2; i++) {
                     List<Integer> row = new ArrayList<>();
-                    int sum = 0;
-                    for (int j = b_column / 2; j <= b_column; j++) {
+                    for (int j = b_column / 2; j < b_column; j++) {
+                        int sum = 0;
                         for (int k = 0; k < a_column; k++) {
                             sum += matrix_A.get(i).get(k) * matrix_B.get(k).get(j);
                         }
-                        System.out.println(sum);
-                        System.out.println(row);
+                        row.add(sum);
+                    }
+                    matrix_p2.add(row);
+                }
+            } else if (partition == 4) {
+                for (int i = a_row / 2; i < a_row; i++) {
+                    List<Integer> row = new ArrayList<>();
+                    for (int j = b_column / 2; j < b_column; j++) {
+                        int sum = 0;
+                        for (int k = 0; k < a_column; k++) {
+                            sum += matrix_A.get(i).get(k) * matrix_B.get(k).get(j);
+                        }
                         row.add(sum);
                     }
                     matrix_p4.add(row);
@@ -138,32 +124,22 @@ public class MatrixMultiplication {
             throw new RuntimeException(e);
         }
 
-        List<List<Integer>> halfUp_matrix;
-        List<List<Integer>> halfDown_matrix;
-//        System.out.println(blockMultiplier1.matrix_p1);///////////////////////////////////////
-
-        System.out.println("HEEEEEEEEEEEEEEEEEEEEEEEEEEREEEEEEEEEEEEEEEEEEEEEEEEE");
         for (int i = 0; i < blockMultiplier1.matrix_p1.size(); i++) {
             for (int j = 0; j < blockMultiplier2.matrix_p2.get(0).size(); j++) {
                 blockMultiplier1.matrix_p1.get(i).add(blockMultiplier2.matrix_p2.get(i).get(j));
             }
         }
-        halfUp_matrix = blockMultiplier1.matrix_p1;
+        List<List<Integer>> halfUp_matrix = blockMultiplier1.matrix_p1;
         for (int i = 0; i < blockMultiplier3.matrix_p3.size(); i++) {
             for (int j = 0; j < blockMultiplier4.matrix_p4.get(0).size(); j++) {
                 blockMultiplier3.matrix_p3.get(i).add(blockMultiplier4.matrix_p4.get(i).get(j));
             }
         }
-        halfDown_matrix = blockMultiplier3.matrix_p3;
+        List<List<Integer>> halfDown_matrix = blockMultiplier3.matrix_p3;
 
 
         tempMatrixProduct.addAll(halfUp_matrix);
         tempMatrixProduct.addAll(halfDown_matrix);
-
-//        for (int i = 0; i < halfUp_matrix.size(); i++) {
-//            tempMatrixProduct.add(halfDown_matrix.get(i));
-//        }
-
 
         return tempMatrixProduct;
     }
@@ -175,14 +151,12 @@ public class MatrixMultiplication {
                 Arrays.asList(4, 5, 6, 4)
         );
         List<List<Integer>> matrix_B = Arrays.asList(
-                Arrays.asList(1, 2),
-                Arrays.asList(4, 5),
-                Arrays.asList(4, 5),
-                Arrays.asList(4, 5)
+                Arrays.asList(1, 2, 5, 2),
+                Arrays.asList(4, 5, 3, 4),
+                Arrays.asList(4, 5, 4, 3),
+                Arrays.asList(4, 5, 6, 1)
 
         );
-
-//        ParallelizeMatMul(matrix_A, matrix_B);
 
         System.out.println(ParallelizeMatMul(matrix_A, matrix_B));
     }
